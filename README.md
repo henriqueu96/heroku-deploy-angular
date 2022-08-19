@@ -1,6 +1,21 @@
 # Publicando projeto angular no Heroku com Github Actions (CI/CD)
 
+## Integração Contínua e o GitHub Actions
+
+## Por que utilizar o Heroku?
+Atualmente existem diversas opções de provedores e serviços na nuvem, o Heroku
+é uma dessas opções para o segmento de PaaS.
+
+O PaaS, plataforma como serviço, abstrai do desenvolvedor os detalhes e o trabalho da elaboração
+de uma infraestrutura para aplicações, além de poder escalar essas aplicações
+de acordo com a necessidade de processamento e uso.
+
+O Heroku suporta Ruby, Java, Clojure, Python, Scala e Node,
+permitindo ao desenvolvedor evitar os gastos e a complexidade de comprar
+e gerenciar licenças de software, infraestrutura e middlewares.
+
 ## Pré requisitos
+
 Ter o node e o angular cli instalados, além de ter um repositório no github
 e uma conta gratuita no Heroku.
 
@@ -31,7 +46,7 @@ git push -u origin master
 ````
 
 ___
-### Script Start
+### Script para compilar e rodar
 Como o Heroku não dá suporte direto ao angular, e sim ao node, então
 fazemos o build com o angular CLI e usamos o node para distribuir
 esse build.
@@ -48,7 +63,7 @@ const express = require('express')
 const path = require('path')
 
 const app = express()
-const appName = 'lista-compras'
+const appName = 'NOME DO APP'
 app.use(express.static(`${__dirname}/dist/${appName}`))
 
 app.get('/', (req, res) => {
@@ -75,7 +90,7 @@ Esses scripts ficam no arquivo ``package.json``.
 ````
 
 ___
-### Script test
+### Scripts de teste
 Para que o deploy aconteça somente quando os testes passarem, temos que 
 ajustar o script de testes para uma versão que rode uma unica vez os testes e
 mostre o resultado. Além disso, podemos escolher um navegador mais rápido
@@ -89,8 +104,9 @@ e que utilize menos recurso, que se chama ChromeHeadless.
 }
 ````
 
-IMPORTANTE: Se o script de teste não for alterado, o github actions não vai parar o passo de teste,
-consumindo com seu tempo de build com o Karma!
+IMPORTANTE: O script de testes padrão do angular roda no navegador chrome e não retorna sucesso,
+se esse script não for alterado, o github não vai interromper esse processo e não saberá
+se os testes passaram ou não, congelando o build.
 
 ___
 ### Adicionando o Github Action
@@ -153,8 +169,14 @@ Habilitar o deploy automático, adicionando a opção de esperar pipeline para
 fazer o deploy. 
 
 ![Image](/.img/heroku-deploy-automatico.png)
-Assim, o deploy acontecerá apenas quando os testes de unidade passarem.
+Pronto! Agora toda vez que o github receber um push na branch main, o app será
+compilado e testado, e se passar, será feito o deploy no Heroku.
 
+Referências:
+https://www.devmedia.com.br/primeiros-passos-em-paas-com-heroku/29465
+https://azure.microsoft.com/pt-br/overview/what-is-paas/
+
+1. Plataforma como serviço
 ___
 Autor: Henrique Felipe Urruth
 Data: 25/05/2022
